@@ -1,0 +1,15 @@
+[package]
+name = "omniflix-profile"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cosmwasm-std = "1.5.4"
+cw-storage-plus = "1.2.0"
+cw2 = "1.1.2"
+schemars = "0.8.16"
+serde = { version = "1.0.197", features = ["derive"] }
+omniflix-std = "0.2.1"
+
+[dev-dependencies]
+cosmwasm-schema = "1.5.4"
