@@ -1,2 +1,2 @@
 [workspace]
-members = ["contracts/omniflix-profile"]
+members = ["contracts/omniflix-profile", "contracts/omniflix-profile/tests"]

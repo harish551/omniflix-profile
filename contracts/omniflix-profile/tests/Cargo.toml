@@ -1,12 +1,15 @@
 [package]
 authors = ["Marri Harish <harishmarri551@gmail.com>"]
-name = "omniflix-profile"
+name = "integration-test"
 edition = "2021"
 version = "0.1.0"
 homepage = ""
 repository = ""
 license = "Apache-2.0"
 
+
+[lib]
+doctest = false
 
 [dependencies]
 cosmwasm-std = "1.5.4"
@@ -20,4 +23,4 @@ thiserror = "1.0"
 
 [dev-dependencies]
 cosmwasm-schema = "1.5.4"
-omniflix-profile = { path = "." }
+omniflix-profile = { path = "../" }

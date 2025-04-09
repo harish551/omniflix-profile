@@ -15,3 +15,4 @@ pub enum ContractError {
     #[error("Profile already exists")]
     ProfileExists {},
 }
+

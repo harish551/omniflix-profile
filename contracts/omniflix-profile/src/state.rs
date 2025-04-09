@@ -22,3 +22,4 @@ pub struct Profile {
 pub const CONFIG: Item<Config> = Item::new("config");
 pub const PROFILES: Map<&Addr, Profile> = Map::new("profiles");
 pub const PROFILE_SEQ: Item<u64> = Item::new("profile_seq");
+
