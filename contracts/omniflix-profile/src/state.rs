@@ -1,8 +1,8 @@
+use cosmwasm_schema::cw_serde;
 use cw_storage_plus::{Item, Map};
 use cosmwasm_std::Addr;
-use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[cw_serde]
 pub struct Config {
     pub admin: Addr,
     pub denom_id: String,
@@ -10,7 +10,7 @@ pub struct Config {
     pub fee_denom: String,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[cw_serde]
 pub struct Profile {
     pub username: String,
     pub bio: String,

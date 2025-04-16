@@ -1,2 +1,4 @@
 [workspace]
-members = ["contracts/omniflix-profile", "contracts/omniflix-profile/tests"]
+members = ["contracts/omniflix-profile"]
+
+resolver = "2"

@@ -1,13 +1,12 @@
 use cosmwasm_std::{
-    entry_point, to_binary, Deps, DepsMut, Env, MessageInfo, Response, Coin, Decimal, Uint128,
-    StdResult, WasmMsg,
+    entry_point, to_json_binary, Deps, DepsMut, Env, MessageInfo, Response, Coin, Decimal, Uint128,
+    StdResult, Binary,
 };
 use omniflix_std::types::omniflix::onft::v1beta1::{MsgMintOnft, MsgCreateDenom, Metadata, WeightedAddress};
 
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{CONFIG, PROFILES, PROFILE_SEQ, Config, Profile};
 use crate::error::ContractError;
-use serde_json::json;
 
 use std::str::FromStr;
 
@@ -144,13 +143,18 @@ pub fn execute_create_profile(
         .add_attribute("fee_paid", paid.amount.to_string()))
 }
 
-#[entry_point]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<cosmwasm_std::Binary> {
+// Implement Queries
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::GetProfile { address } => {
-            let addr = deps.api.addr_validate(&address)?;
-            let profile = PROFILES.load(deps.storage, &addr)?;
-            to_binary(&profile)
+        QueryMsg::Profile { address } => {
+            to_json_binary(&query_profile(deps, address)?)
         }
     }
+}
+
+fn query_profile(deps: Deps, address: String) -> Result<Profile, ContractError> {
+    let addr = deps.api.addr_validate(&address)?;
+    let profile = PROFILES.load(deps.storage, &addr)?;
+    Ok(profile)
 }

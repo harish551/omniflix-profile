@@ -1,7 +1,6 @@
-use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
+use cosmwasm_schema::{cw_serde, QueryResponses};
 
-#[derive(Serialize, Deserialize, JsonSchema)]
+#[cw_serde]
 pub struct InstantiateMsg {
     pub admin: String,
     pub fee_amount: u128,
@@ -11,8 +10,7 @@ pub struct InstantiateMsg {
     pub denom_symbol: String,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum ExecuteMsg {
     CreateProfile {
         username: String,
@@ -22,8 +20,18 @@ pub enum ExecuteMsg {
     },
 }
 
-#[derive(Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
+#[derive(QueryResponses)]
 pub enum QueryMsg {
-    GetProfile { address: String },
+    #[returns(ProfileResponse)]
+    Profile { address: String },
+}
+
+#[cw_serde]
+pub struct ProfileResponse {
+    pub username: String,
+    pub bio: String,
+    pub social_links: Vec<String>,
+    pub profile_image: String,
+    pub nft_id: String,
 }
