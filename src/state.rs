@@ -4,7 +4,6 @@ use cosmwasm_std::Addr;
 
 #[cw_serde]
 pub struct Config {
-    pub admin: Addr,
     pub denom_id: String,
     pub fee_amount: u128,
     pub fee_denom: String,

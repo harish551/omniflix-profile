@@ -2,7 +2,6 @@ use cosmwasm_schema::{cw_serde, QueryResponses};
 
 #[cw_serde]
 pub struct InstantiateMsg {
-    pub admin: String,
     pub fee_amount: u128,
     pub fee_denom: String,
     pub denom_id: String,

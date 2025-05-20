@@ -14,11 +14,10 @@ use std::str::FromStr;
 pub fn instantiate(
     deps: DepsMut,
     env: Env,
-    info: MessageInfo,
+    _info: MessageInfo,
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     let config = Config {
-        admin: deps.api.addr_validate(&msg.admin)?,
         denom_id: msg.denom_id.clone(),
         fee_amount: msg.fee_amount,
         fee_denom: msg.fee_denom,
@@ -105,21 +104,22 @@ pub fn execute_create_profile(
     let metadata = Metadata {
         name: username.clone(),
         description: bio.clone(),
-        media_uri: "_".to_string(),
-        preview_uri: "_".to_string(),
-        uri_hash: "_".to_string(),
+        media_uri: "ipfs://media-uri".to_string(),
+        preview_uri: "ipfs://preview-uri".to_string(),
+        uri_hash: "uri-hash".to_string(),
     };
-
+    let profile_data = Profile {
+            username: username,
+            bio: bio,
+            social_links: social_links,
+            profile_image: profile_image
+    };
+   
     let mint_onft_msg = MsgMintOnft {
         id: nft_id.clone(),
         denom_id: config.denom_id,
         metadata: Some(metadata),
-        data: serde_json::json!({
-            "username": username,
-            "bio": bio,
-            "social_links": social_links,
-            "profile_image": profile_image
-        }).to_string(),
+        data: serde_json::to_string(&profile_data)?,
         transferable: false,
         extensible: true,
         nsfw: false,
