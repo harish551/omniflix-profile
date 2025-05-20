@@ -24,6 +24,8 @@ pub enum ExecuteMsg {
 pub enum QueryMsg {
     #[returns(ProfileResponse)]
     Profile { address: String },
+    #[returns(ConfigResponse)]
+    Config {},
 }
 
 #[cw_serde]
@@ -33,4 +35,11 @@ pub struct ProfileResponse {
     pub social_links: Vec<String>,
     pub profile_image: String,
     pub nft_id: String,
+}
+
+#[cw_serde]
+pub struct ConfigResponse {
+    pub denom_id: String,
+    pub fee_amount: u128,
+    pub fee_denom: String,
 }

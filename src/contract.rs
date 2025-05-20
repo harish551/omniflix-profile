@@ -4,7 +4,7 @@ use cosmwasm_std::{
 };
 use omniflix_std::types::omniflix::onft::v1beta1::{MsgMintOnft, MsgCreateDenom, Metadata, WeightedAddress};
 
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, ProfileResponse, ConfigResponse};
 use crate::state::{CONFIG, PROFILES, PROFILE_SEQ, Config, Profile};
 use crate::error::ContractError;
 
@@ -108,22 +108,17 @@ pub fn execute_create_profile(
         preview_uri: "ipfs://preview-uri".to_string(),
         uri_hash: "uri-hash".to_string(),
     };
-    let profile_data = Profile {
-            username: username,
-            bio: bio,
-            social_links: social_links,
-            profile_image: profile_image
-    };
-   
+    
+    let data = format!("\"username\": {}", username.clone());
     let mint_onft_msg = MsgMintOnft {
         id: nft_id.clone(),
         denom_id: config.denom_id,
         metadata: Some(metadata),
-        data: serde_json::to_string(&profile_data)?,
+        data: data,
         transferable: false,
         extensible: true,
         nsfw: false,
-        royalty_share: Decimal::from_str("0.01")?.to_string(),
+        royalty_share: Decimal::from_str("0.00")?.atomics().to_string(),
         sender: env.contract.address.to_string(),
         recipient: info.sender.to_string(),
     };
@@ -150,11 +145,29 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         QueryMsg::Profile { address } => {
             to_json_binary(&query_profile(deps, address)?)
         }
+        QueryMsg::Config {} => {
+            to_json_binary(&query_config(deps)?)
+        }
     }
 }
 
-fn query_profile(deps: Deps, address: String) -> Result<Profile, ContractError> {
+fn query_config(deps: Deps) -> Result<ConfigResponse, ContractError> {
+    let config = CONFIG.load(deps.storage)?;
+    Ok(ConfigResponse {
+        denom_id: config.denom_id,
+        fee_amount: config.fee_amount,
+        fee_denom: config.fee_denom,
+    })
+}
+
+fn query_profile(deps: Deps, address: String) -> Result<ProfileResponse, ContractError> {
     let addr = deps.api.addr_validate(&address)?;
     let profile = PROFILES.load(deps.storage, &addr)?;
-    Ok(profile)
+    Ok(ProfileResponse {
+        username: profile.username,
+        bio: profile.bio,
+        social_links: profile.social_links,
+        profile_image: profile.profile_image,
+        nft_id: profile.nft_id
+    })
 }
